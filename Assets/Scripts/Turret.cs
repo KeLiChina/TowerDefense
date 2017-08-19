@@ -5,14 +5,22 @@ using UnityEngine;
 
 public class Turret : MonoBehaviour {
 
-	public Transform target ;
-	private float atkRange = 15f ;
+	[Header("Arrtributes")]
+	public float fireRate = 5f;// fire float times in one seconds
+	public float rotateSpeed = 5f;
+	public float fireCountdown = 0;
+	public float atkRange = 15f ;
+	private Transform target ;
+	private Transform firePoint;
 	private Transform partToRotate;
 	private Vector3 tempDir;
-	private float rotateSpeed = 5f;
+	private GameObject bullet;
+	
 	void Awake()
 	{
 		partToRotate = transform.Find("Res");
+		firePoint = transform.Find("Res/FirePosition");
+		bullet = Resources.Load<GameObject>("Bullet");
 	}
 	void Start () {
 		InvokeRepeating("UpdateAtkTarget",0f,0.5f);
@@ -25,6 +33,7 @@ public class Turret : MonoBehaviour {
 			return;
 		}
 		RotateToTarget();
+		Fire();
 		Debug.DrawLine(transform.position,target.position,Color.green);
 	}
 	private void UpdateAtkTarget()
@@ -54,7 +63,26 @@ public class Turret : MonoBehaviour {
 		tempDir = -transform.position + target.position;
 		Quaternion lookRotation = Quaternion.LookRotation(tempDir);
 		// Vector3 rotation = lookRotation.eulerAngles;
-		Vector3 rotation = Quaternion.Lerp(partToRotate.rotation,lookRotation,Time.deltaTime*rotateSpeed).eulerAngles;
+		Vector3 rotation = Quaternion.Lerp(partToRotate.rotation,lookRotation
+		,Time.deltaTime*rotateSpeed).eulerAngles;
 		partToRotate.rotation = Quaternion.Euler(0f,rotation.y,0f);
 	}
+	private void Fire()
+	{
+		if (fireCountdown <= 0f)
+		{
+			Shoot();
+			fireCountdown = 1f/fireRate;
+		}
+		fireCountdown -= Time.deltaTime;
+	}
+	private void Shoot()
+	{
+		Transform targetTemp = target;
+		GameObject bulletGO = Instantiate(bullet,firePoint.position,firePoint.rotation,transform);
+		Bullet bulletScript = bulletGO.GetComponent<Bullet>();
+		if (bulletScript != null)
+			bulletScript.Seek(target);
+	}
+
 }
