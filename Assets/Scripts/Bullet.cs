@@ -46,7 +46,7 @@ public class Bullet : MonoBehaviour
     }
 	private void HitTarget()
 	{
-		GameObject effect = Instantiate(BulletImpact,transform.position,transform.rotation);
+		GameObject effect = Instantiate(BulletImpact,transform.position,transform.rotation,BuildManager.instance.transform);
 		Destroy(effect,4f);
 		Destroy(gameObject);
 	}
