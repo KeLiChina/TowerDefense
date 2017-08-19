@@ -44,6 +44,7 @@ public class Enemy : MonoBehaviour {
 		// brackeys function
 		if (wayPointIndex >= WayPoints.wayPoints.Length -1)
 		{
+			WaveSpawner.instance.Enemys.Remove(this);
 			Destroy(gameObject);
 			return;
 		}
