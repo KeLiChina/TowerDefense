@@ -5,8 +5,9 @@ using UnityEngine;
 public class BuildManager : MonoBehaviour {
 
 	public static BuildManager instance;
+	public GameObject standardTurretPrefab;
+	public GameObject anotherTurretPrefab;
 	private GameObject turretToBuild;
-	private GameObject standardTurretPrefab;
 	void Awake()
 	{
 		if (instance == null)
@@ -19,12 +20,12 @@ public class BuildManager : MonoBehaviour {
 		}
 		standardTurretPrefab = Resources.Load<GameObject>("BloodEyeTurret");
 	}
-	void Start()
-	{
-		turretToBuild = standardTurretPrefab;
-	}
 	public GameObject GetTurretToBuild()
 	{
 		return turretToBuild;
+	}
+	public void SetTurretToBuild(GameObject turret)
+	{
+		turretToBuild = turret;
 	}
 }
